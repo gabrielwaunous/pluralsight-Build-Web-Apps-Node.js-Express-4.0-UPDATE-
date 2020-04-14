@@ -6,7 +6,13 @@ const debug = require('debug')('app:bookRoutes');
 const bookRouter = express.Router();
 
 function router(nav) {
-
+  bookRouter.unsubscribe((req, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/');
+    }
+  });
   bookRouter.route('/')
     .get((req, res) => {
       const url = 'mongodb://localhost:27017';
@@ -64,7 +70,7 @@ function router(nav) {
               book
             });
 
-        }catch(err){
+        }catch(err) {
           debug(err.stack);
         }
         }());
